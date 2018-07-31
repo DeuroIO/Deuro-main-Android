@@ -29,12 +29,10 @@ import android.widget.LinearLayout;
 
 import yalantis.com.sidemenu.util.ViewAnimator;
 
-
+import com.deuro.android.Fragments.Home_Fragment;
 import com.deuro.android.R;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import yalantis.com.sidemenu.interfaces.Resourceble;
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
@@ -55,14 +53,14 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
     public static final String AI = "Ai";
     public static final String SYS = "Sys";
     public static final String dAPP = "dApp";
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         mContext = this;
-
+        Home_Fragment home_fragment = new Home_Fragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, home_fragment).commit();
         drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
         linearLayout = findViewById(R.id.left_drawer);
@@ -78,7 +76,7 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorBlack));
         setActionBar();
         createMenuList();
-//        viewAnimator = new ViewAnimator<>(this, list, home_fragment, drawerLayout, this);
+        viewAnimator = new ViewAnimator<>(this, list, home_fragment, drawerLayout, this);
     }
 
     private void createMenuList() {
@@ -93,7 +91,6 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
         SlideMenuItem menuItem4 = new SlideMenuItem(dAPP, R.drawable.dapp_icon);
         list.add(menuItem4);
     }
-
     private void setActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         telegram_imageview = findViewById(R.id.telegram_imageview);
@@ -106,7 +103,6 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
                 linearLayout.removeAllViews();
                 linearLayout.invalidate();
             }
-
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
@@ -146,9 +142,12 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
         switch (slideMenuItem.getName()) {
             case CLOSE:
                 return screenShotable;
+            case HOME:
+                return showHome(screenShotable, position);
 
+            default:
+                return showHome(screenShotable, position);
         }
-        return screenShotable;
     }
 
     private void showNetworkDialog(Context mContext) {
@@ -175,6 +174,7 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
         animator.start();
     }
 
+
     private void telegram() {
         String url_Telegram = "http://t.me/deuroio_english";
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -182,6 +182,13 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
         startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private ScreenShotable showHome(ScreenShotable screenShotable, int position) {
+        animationShow(screenShotable, position);
+        Home_Fragment contentFragment = new Home_Fragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
+        return contentFragment;
+    }
 
     @Override
     public void disableHomeButton() {
