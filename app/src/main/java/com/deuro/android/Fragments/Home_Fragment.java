@@ -12,8 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.deuro.android.Adapter.CustomAdapter;
 import com.deuro.android.Models.HomeModel;
 import com.deuro.android.R;
+import com.example.library.FocusResizeScrollListener;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 
@@ -32,6 +36,7 @@ public class Home_Fragment extends Fragment implements ScreenShotable {
     ArrayList<HomeModel> arrayList;
     ArrayList<HomeModel> homeModelArrayList;
     private int scrollPosition;
+    private CustomAdapter customAdapter;
 
     public Home_Fragment() {
 
@@ -45,14 +50,39 @@ public class Home_Fragment extends Fragment implements ScreenShotable {
         arrayList = new ArrayList<>();
         homeModelArrayList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
+        createCustomAdapter(recyclerView, linearLayoutManager);
 
         return view;
     }
 
 
 
-
+    private void createCustomAdapter(RecyclerView recyclerView, LinearLayoutManager linearLayoutManager) {
+        customAdapter = new CustomAdapter(getActivity(), (int) getResources().getDimension(R.dimen.custom_item_height));
+        customAdapter.addItems(addItems());
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(customAdapter);
+            recyclerView.addOnScrollListener(new FocusResizeScrollListener<>(customAdapter, linearLayoutManager));
+        }
+    }
+    public ArrayList<HomeModel> addItems()
+    {
+        JSONArray array = loadJSONFromAsset(mContext);
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                JSONObject jsonObject = new JSONObject(String.valueOf(array.get(i)));
+                HomeModel homeModel = new HomeModel(jsonObject);
+                homeModel.setPosition(i);
+                homeModelArrayList.add(homeModel);
+                customAdapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return homeModelArrayList;
+    }
 
     @Override
     public void takeScreenShot() {
@@ -83,4 +113,10 @@ public class Home_Fragment extends Fragment implements ScreenShotable {
         }
         return jsonArray;
     }
+
+    public static Drawable GetImage(Context c, String ImageName) {
+        ImageName = ImageName.replace(".png", "");
+        return c.getResources().getDrawable(c.getResources().getIdentifier(ImageName, "drawable", c.getPackageName()));
+    }
+
 }
