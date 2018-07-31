@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import yalantis.com.sidemenu.util.ViewAnimator;
 
 import com.deuro.android.Fragments.Home_Fragment;
+import com.deuro.android.Fragments.Webview_Fragment;
 import com.deuro.android.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +145,27 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
                 return screenShotable;
             case HOME:
                 return showHome(screenShotable, position);
-
+            case AI:
+                if (!isNetworkConnected(mContext)) {
+                    showNetworkDialog(mContext);
+                    return showHome(screenShotable, position);
+                } else {
+                    return showAL(screenShotable, position);
+                }
+            case SYS:
+                if (!isNetworkConnected(mContext)) {
+                    showNetworkDialog(mContext);
+                    return showHome(screenShotable, position);
+                } else {
+                    return showSYS(screenShotable, position);
+                }
+            case dAPP:
+                if (!isNetworkConnected(mContext)) {
+                    showNetworkDialog(mContext);
+                    return showHome(screenShotable, position);
+                } else {
+                    return showdAPP(screenShotable, position);
+                }
             default:
                 return showHome(screenShotable, position);
         }
@@ -174,6 +195,38 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
         animator.start();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private ScreenShotable showdAPP(ScreenShotable screenShotable, int position) {
+        animationShow(screenShotable, position);
+        Webview_Fragment contentFragment = new Webview_Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("url", dapp);
+        contentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
+        return contentFragment;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private ScreenShotable showSYS(ScreenShotable screenShotable, int position) {
+        animationShow(screenShotable, position);
+        Webview_Fragment contentFragment = new Webview_Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("url", sys);
+        contentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
+        return contentFragment;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private ScreenShotable showAL(ScreenShotable screenShotable, int position) {
+        animationShow(screenShotable, position);
+        Webview_Fragment contentFragment = new Webview_Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("url", ai);
+        contentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, contentFragment).commit();
+        return contentFragment;
+    }
 
     private void telegram() {
         String url_Telegram = "http://t.me/deuroio_english";
