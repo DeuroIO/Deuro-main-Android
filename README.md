@@ -1,6 +1,6 @@
 # Deuro
 
-![Platform](http://img.shields.io/badge/platform-iOS-blue.svg?style=flat)
+![Platform](http://img.shields.io/badge/platform-Android-blue.svg?style=flat)
 ![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)
 
 <img src="demo.gif" />
