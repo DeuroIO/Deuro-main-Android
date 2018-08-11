@@ -45,9 +45,9 @@ public class DrawerActivity extends AppCompatActivity implements ViewAnimator.Vi
     private ViewAnimator viewAnimator;
     private LinearLayout linearLayout;
     private ImageView telegram_imageview;
-    String ai = "http://ai.deuro.io";
-    String sys = "http://sys.deuro.io";
-    String dapp = "http://dapp.deuro.io";
+    String ai = "http://18.221.131.198:3000/";
+    String sys = "http://18.221.131.198:19999/";
+    String dapp = "http://18.221.131.198:3000/";
     private Context mContext;
     public static final String CLOSE = "Close";
     public static final String HOME = "Home";
